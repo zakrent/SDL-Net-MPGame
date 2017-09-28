@@ -6,22 +6,31 @@
 #include <SDL_net.h>
 #include <iostream>
 #include "Program.h"
+#include "misc/log.h"
 
 Program::Program() {
     int error = SDL_Init(SDL_INIT_EVERYTHING);
+    consoleLog::logMessage(consoleLog::logLevel::info, "Server startup...");
     if(error < 0){
-        std::cerr<<"Error initializing SDL "<<SDL_GetError();
+        consoleLog::logMessage(consoleLog::logLevel::error, "Error initializing SDL!");
         std::abort();
     }
     error = SDLNet_Init();
     if(error < 0){
-        std::cerr<<"Error initializing SDLnet "<<SDL_GetError();
+        consoleLog::logMessage(consoleLog::logLevel::error, "Error initializing SDLnet!");
         std::abort();
     }
     lastUpdate=SDL_GetTicks();
+
 }
 
 Program::~Program() {
+    consoleLog::logMessage(consoleLog::logLevel::info, "Server shutting down...");
+
+    for(int i = 0; i < entities.size(); i++) {
+        delete entities[i];
+    }
+
     SDLNet_Quit();
     SDL_Quit();
 }
@@ -29,6 +38,14 @@ Program::~Program() {
 void Program::startMainLoop() {
     bool running = true;
     while(running){
+
+        for(int i = 0; i < entities.size(); i++){
+            entities[i]->update();
+            if(entities[i]->shouldBeDestroyed){
+                delete entities[i];
+                entities.erase(entities.begin()+i);
+            }
+        }
 
         SDL_Event event;
         while( SDL_PollEvent( &event) != 0 ) {
