@@ -5,11 +5,11 @@
 #ifndef GAME_MP_SERVER_BASEENTITY_H
 #define GAME_MP_SERVER_BASEENTITY_H
 
-
 #include "../math/Vector2.h"
 #include "../misc/types.h"
 #include <SDL.h>
 #include <SDL_video.h>
+
 namespace Entity {
     class BaseEntity {
     protected:

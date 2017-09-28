@@ -7,6 +7,10 @@
 
 #include <vector>
 #include "entity/BaseEntity.h"
+#include <SDL2/SDL.h>
+#include <SDL_net.h>
+#include <iostream>
+#include "misc/log.h"
 
 class Program {
 private:

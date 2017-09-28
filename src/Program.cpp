@@ -2,11 +2,7 @@
 // Created by zakrent on 9/26/17.
 //
 
-#include <SDL2/SDL.h>
-#include <SDL_net.h>
-#include <iostream>
 #include "Program.h"
-#include "misc/log.h"
 
 Program::Program() {
     int error = SDL_Init(SDL_INIT_EVERYTHING);

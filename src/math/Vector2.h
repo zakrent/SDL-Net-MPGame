@@ -5,6 +5,8 @@
 #ifndef GAME_MP_SERVER_VECTOR2_H
 #define GAME_MP_SERVER_VECTOR2_H
 
+#include <cmath>
+
 namespace math {
 
     class Vector2 {
