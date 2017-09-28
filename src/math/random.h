@@ -6,6 +6,7 @@
 #define GAME_MP_SERVER_RANDOM_H
 
 #include <random>
+#include "../misc/types.h"
 
 namespace math {
 
@@ -18,6 +19,9 @@ namespace math {
         return intDistribution(generator);
     }
 
+    uint64 getRandomId(){
+        return ((uint64)randomInt(0,2147483647)+(uint64)randomInt(0,2147483647));
+    }
 
 }
 

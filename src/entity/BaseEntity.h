@@ -13,10 +13,11 @@
 namespace Entity {
     class BaseEntity {
     protected:
-        int64 id;
+        uint64 id;
         math::Vector2 position;
         math::Vector2 lastPos;
         math::Vector2 velocity;
+        float colliderRadius;
         SDL_Rect srcrect;
 
         void updatePhysics();
