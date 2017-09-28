@@ -2,7 +2,6 @@
 // Created by zakrent on 9/26/17.
 //
 
-#include <cmath>
 #include "Vector2.h"
 
 namespace math {
