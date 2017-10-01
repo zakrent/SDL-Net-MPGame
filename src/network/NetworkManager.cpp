@@ -44,4 +44,8 @@ namespace network {
         SDLNet_TCP_AddSocket(socketSet, client.socket);
         clients.push_back(client);
     }
+
+    void NetworkManager::distributeMessage(BaseMessage message) {
+
+    }
 }

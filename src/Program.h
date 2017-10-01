@@ -16,7 +16,7 @@ class Program {
 private:
     const int MIN_UPDATE_TIME = 10;
     int lastUpdate;
-    std::vector<Entity::BaseEntity*> entities;
+    std::vector<entity::BaseEntity*> entities;
 public:
     void startMainLoop();
 
