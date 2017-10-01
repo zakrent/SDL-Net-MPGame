@@ -7,6 +7,7 @@
 
 #include "../math/Vector2.h"
 #include "../misc/types.h"
+#include "../network/states/EntityState.h"
 #include <SDL.h>
 #include <SDL_video.h>
 
@@ -26,7 +27,7 @@ namespace entity {
         bool shouldBeDestroyed;
 
         virtual void update() {};
-        virtual char* generateNetworkUpdateMsg() {};
+        virtual network::EntityState generateEntityState();
         BaseEntity(math::Vector2 position, math::Vector2 velocity);
     };
 }

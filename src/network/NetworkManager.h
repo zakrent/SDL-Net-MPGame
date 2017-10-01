@@ -10,8 +10,6 @@
 #include "Client.h"
 #include <SDL_net.h>
 #include "../misc/log.h"
-#include "messages/Base.h"
-#include "messages/EntityUpdate.h"
 
 namespace network {
     class NetworkManager {
@@ -21,10 +19,12 @@ namespace network {
 
         std::vector<Client> clients;
 
+        GameState currentGameState;
+
         void addClient(Client client);
     public:
 
-        void distributeMessage(BaseMessage message);
+        void updateClientState();
         void checkForIncomingConnections();
         NetworkManager();
     };

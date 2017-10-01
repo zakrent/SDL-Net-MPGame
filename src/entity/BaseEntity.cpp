@@ -11,4 +11,8 @@ namespace entity {
         lastPos = position;
         position += velocity;
     }
+
+    network::EntityState BaseEntity::generateEntityState() {
+        return network::EntityState(id, position, velocity, srcrect);
+    }
 }

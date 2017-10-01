@@ -45,7 +45,12 @@ namespace network {
         clients.push_back(client);
     }
 
-    void NetworkManager::distributeMessage(BaseMessage message) {
-
+    void NetworkManager::updateClientState() {
+        char buffer[1000];
+        for(Client& client : clients){
+            strncpy(buffer, "", 1000);
+            currentGameState.serialize(buffer, client.clientGameState);
+            SDLNet_TCP_Send(client.socket, buffer, (int)strlen(buffer));
+        }
     }
 }
