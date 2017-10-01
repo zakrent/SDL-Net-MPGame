@@ -21,7 +21,7 @@ namespace network {
 
     }
 
-    void NetworkManager::checkForIncomingConnections(){
+    void NetworkManager::checkForIncomingTraffic(){
         if(0 < SDLNet_CheckSockets(socketSet, 10)){
             if(SDLNet_SocketReady(serverTcpsock)){
                 TCPsocket client;
@@ -51,6 +51,15 @@ namespace network {
             strncpy(buffer, "", 1000);
             currentGameState.serialize(buffer, client.clientGameState);
             SDLNet_TCP_Send(client.socket, buffer, (int)strlen(buffer));
+            client.clientGameState = currentGameState;
         }
+    }
+
+    void NetworkManager::generateCurrentGameState(std::vector<entity::BaseEntity> entities) {
+        GameState newGameState;
+        for(entity::BaseEntity entity : entities){
+            newGameState.addEntityState(entity.generateEntityState());
+        }
+        currentGameState = newGameState;
     }
 }

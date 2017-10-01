@@ -31,7 +31,8 @@ namespace network{
                 }else{
                     auto element = *iter;
                     EntityState prevState = element.second;
-                    state.second.serialize(buffer, state.second.getDelta(prevState));
+                    if(state.second.getDelta(prevState))
+                        state.second.serialize(buffer, state.second.getDelta(prevState));
                 }
             }
         }
