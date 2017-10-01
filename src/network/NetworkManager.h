@@ -10,6 +10,8 @@
 #include "Client.h"
 #include <SDL_net.h>
 #include "../misc/log.h"
+#include "messages/Base.h"
+#include "messages/EntityUpdate.h"
 
 namespace network {
     class NetworkManager {
@@ -21,6 +23,8 @@ namespace network {
 
         void addClient(Client client);
     public:
+
+        void distributeMessage(BaseMessage message);
         void checkForIncomingConnections();
         NetworkManager();
     };

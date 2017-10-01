@@ -10,7 +10,7 @@
 #include <SDL.h>
 #include <SDL_video.h>
 
-namespace Entity {
+namespace entity {
     class BaseEntity {
     protected:
         uint64 id;

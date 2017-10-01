@@ -3,7 +3,7 @@
 //
 #include "BaseEntity.h"
 
-namespace Entity {
+namespace entity {
     BaseEntity::BaseEntity(math::Vector2 position, math::Vector2 velocity = math::Vector2(0, 0))
             : position(position), lastPos(position), velocity(velocity), shouldBeDestroyed(false) {}
 
