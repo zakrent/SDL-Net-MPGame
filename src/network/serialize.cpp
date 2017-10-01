@@ -13,6 +13,16 @@ namespace network {
         }
     }
 
+    void serializeUInt32(char *buffer, uint32 value) {
+        for (int i = 0; i < 4; ++i) {
+            buffer[i] = (value >> i * 8) & 0xFF;
+        }
+    }
+
+    void serializeUInt8(char *buffer, uint8 value) {
+        buffer[0] = value;
+    }
+
     void serializeInt(char *buffer, int value) {
         for (int i = 0; i < 4; ++i) {
             buffer[i] = (value >> i * 8) & 0xFF;
@@ -70,18 +80,37 @@ namespace network {
         serializeUInt64(buffer, result);
     }
 
+    void serializeVector(char *buffer, math::Vector2 value) {
+        serializeDouble(buffer, (double)value.x);
+        serializeDouble(buffer+8, (double)value.y);
+    }
+
     uint64 unserializeUInt64(char *data) {
         uint64 result = 0;
         for (int i = 0; i < 8; ++i) {
             result = result ^ ((data[i] << i * 8) & 0xFF);
         }
+        return result;
     }
 
-    int unserializeInt(char *data) {
-        uint64 result = 0;
+    uint32 unserializeUInt32(char *data) {
+        uint32 result = 0;
         for (int i = 0; i < 4; ++i) {
             result = result ^ ((data[i] << i * 8) & 0xFF);
         }
+        return result;
+    }
+
+    uint8 unserializeUInt8(char *data) {
+        return data[0];
+    }
+
+    int unserializeInt(char *data) {
+        int result = 0;
+        for (int i = 0; i < 4; ++i) {
+            result = result ^ ((data[i] << i * 8) & 0xFF);
+        }
+        return result;
     }
 
 //modified version of https://beej.us/guide/bgnet/output/html/singlepage/bgnet.html#serialization
@@ -118,6 +147,14 @@ namespace network {
         // sign it
         result *= (i >> (bits - 1)) & 1 ? -1.0 : 1.0;
 
+        return result;
+    }
+
+
+    math::Vector2 unserializeVector(char *data) {
+        math::Vector2 result(0,0);
+        result.x = unserializeDouble(data);
+        result.y = unserializeDouble(data+8);
         return result;
     }
 }

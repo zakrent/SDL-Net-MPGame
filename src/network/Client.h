@@ -7,13 +7,15 @@
 
 #include <SDL_net.h>
 #include "../misc/types.h"
+#include "states/GameState.h"
 
 namespace network {
     struct Client {
         TCPsocket socket;
         uint32 timeout;
+        GameState clientGameState;
 
-        Client(TCPsocket _socket, uint32_t _timeout) : socket(_socket), timeout(_timeout) {}
+        Client(TCPsocket _socket, uint32_t _timeout) : socket(_socket), timeout(_timeout), clientGameState() {}
     };
 }
 
