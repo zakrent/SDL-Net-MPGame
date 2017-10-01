@@ -1,6 +1,7 @@
 //
 // Created by zakrent on 9/28/17.
 //
+#include <SDL_net.h>
 #include "NetworkManager.h"
 
 namespace network {
@@ -18,5 +19,29 @@ namespace network {
         }
         socketSet=SDLNet_AllocSocketSet(16);
 
+    }
+
+    void NetworkManager::checkForIncomingConnections(){
+        if(0 < SDLNet_CheckSockets(socketSet, 10)){
+            if(SDLNet_SocketReady(serverTcpsock)){
+                TCPsocket client;
+                client = SDLNet_TCP_Accept(serverTcpsock);
+                if(client){
+                    Client clientStruct(client, SDL_GetTicks());
+
+                    IPaddress* clientAddr = SDLNet_TCP_GetPeerAddress(client);
+                    char logMessage[20];
+                    snprintf(logMessage, 20, "Connection from %u", SDLNet_Read32(clientAddr->host));
+                    consoleLog::logMessage(consoleLog::logLevel::info ,logMessage);
+
+                    addClient(clientStruct);
+                }
+            }
+        }
+    }
+
+    void NetworkManager::addClient(Client client) {
+        SDLNet_TCP_AddSocket(socketSet, client.socket);
+        clients.push_back(client);
     }
 }

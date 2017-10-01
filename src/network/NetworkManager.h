@@ -8,6 +8,7 @@
 #include <SDL_net.h>
 #include <vector>
 #include "Client.h"
+#include <SDL_net.h>
 #include "../misc/log.h"
 
 namespace network {
@@ -18,8 +19,9 @@ namespace network {
 
         std::vector<Client> clients;
 
+        void addClient(Client client);
     public:
-
+        void checkForIncomingConnections();
         NetworkManager();
     };
 }
