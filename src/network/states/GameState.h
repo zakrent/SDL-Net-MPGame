@@ -18,22 +18,28 @@ namespace network{
         }
 
         void serialize(char* buffer){
+            char tempBuffer[100];
             for (auto state : states) {
-                state.second.serialize(buffer, 0xff);
+                strncpy(tempBuffer, "", 100);
+                state.second.serialize(tempBuffer, 0xff);
+                strncat(buffer, tempBuffer, strlen(tempBuffer)+1);
             }
         }
 
         void serialize(char* buffer, GameState prevGameState){
+            char tempBuffer[100];
             for (auto state : states) {
+                strncpy(tempBuffer, "", 100);
                 auto iter = prevGameState.states.find(state.second.getId());
                 if(iter == prevGameState.states.end()){
-                    state.second.serialize(buffer, 0xff);
+                    state.second.serialize(tempBuffer, 0xff);
                 }else{
                     auto element = *iter;
                     EntityState prevState = element.second;
                     if(state.second.getDelta(prevState))
-                        state.second.serialize(buffer, state.second.getDelta(prevState));
+                        state.second.serialize(tempBuffer, state.second.getDelta(prevState));
                 }
+                strncat(buffer, tempBuffer, strlen(tempBuffer)+1);
             }
         }
 
