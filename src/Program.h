@@ -11,11 +11,13 @@
 #include <SDL_net.h>
 #include <iostream>
 #include "misc/log.h"
+#include "network/NetworkManager.h"
 
 class Program {
 private:
     const int MIN_UPDATE_TIME = 10;
     int lastUpdate;
+    network::NetworkManager networkManager;
     std::vector<entity::BaseEntity*> entities;
 public:
     void startMainLoop();

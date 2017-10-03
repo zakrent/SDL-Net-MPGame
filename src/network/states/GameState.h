@@ -26,21 +26,20 @@ namespace network{
             }
         }
 
-        void serialize(char* buffer, GameState prevGameState){
-            char tempBuffer[100];
+        int serialize(char* buffer, GameState prevGameState){
+            int offset = 0;
             for (auto state : states) {
-                strncpy(tempBuffer, "", 100);
                 auto iter = prevGameState.states.find(state.second.getId());
                 if(iter == prevGameState.states.end()){
-                    state.second.serialize(tempBuffer, 0xff);
+                    offset += state.second.serialize(buffer+offset, 0xff);
                 }else{
                     auto element = *iter;
                     EntityState prevState = element.second;
                     if(state.second.getDelta(prevState))
-                        state.second.serialize(tempBuffer, state.second.getDelta(prevState));
+                        offset += state.second.serialize(buffer+offset, state.second.getDelta(prevState));
                 }
-                strncat(buffer, tempBuffer, strlen(tempBuffer)+1);
             }
+            return offset;
         }
 
     };
