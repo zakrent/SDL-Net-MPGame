@@ -18,6 +18,7 @@ Program::Program() {
     }
     lastUpdate=SDL_GetTicks();
 
+    entities.push_back(new entity::BaseEntity(math::Vector2(0,0), math::Vector2(10,0)));
 }
 
 Program::~Program() {
@@ -35,6 +36,8 @@ void Program::startMainLoop() {
     bool running = true;
     while(running){
 
+        networkManager.checkForIncomingTraffic();
+
         for(int i = 0; i < entities.size(); i++){
             entities[i]->update();
             if(entities[i]->shouldBeDestroyed){
@@ -42,6 +45,9 @@ void Program::startMainLoop() {
                 entities.erase(entities.begin()+i);
             }
         }
+
+        networkManager.generateCurrentGameState(entities);
+        networkManager.updateClientState();
 
         SDL_Event event;
         while( SDL_PollEvent( &event) != 0 ) {

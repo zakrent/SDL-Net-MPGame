@@ -18,7 +18,7 @@ namespace network {
             std::abort();
         }
         socketSet=SDLNet_AllocSocketSet(16);
-
+        SDLNet_TCP_AddSocket(socketSet,serverTcpsock);
     }
 
     void NetworkManager::checkForIncomingTraffic(){
@@ -31,7 +31,7 @@ namespace network {
 
                     IPaddress* clientAddr = SDLNet_TCP_GetPeerAddress(client);
                     char logMessage[20];
-                    snprintf(logMessage, 20, "Connection from %u", SDLNet_Read32(clientAddr->host));
+                    //snprintf(logMessage, 20, "Connection from %u", SDLNet_Read32(clientAddr->host));
                     consoleLog::logMessage(consoleLog::logLevel::info ,logMessage);
 
                     addClient(clientStruct);
@@ -47,18 +47,23 @@ namespace network {
 
     void NetworkManager::updateClientState() {
         char buffer[1000];
-        for(Client& client : clients){
+        for(int i = 0; i < clients.size(); i++){
+            Client client = clients[i];
             strncpy(buffer, "", 1000);
-            currentGameState.serialize(buffer, client.clientGameState);
-            SDLNet_TCP_Send(client.socket, buffer, (int)strlen(buffer));
-            client.clientGameState = currentGameState;
+            int length = currentGameState.serialize(buffer, client.clientGameState);
+            int result = SDLNet_TCP_Send(client.socket, buffer, length);
+            if(result < length){
+                SDLNet_TCP_DelSocket(socketSet, client.socket);
+                clients.erase(clients.begin()+i);
+            }
+            clients[i].clientGameState = currentGameState;
         }
     }
 
-    void NetworkManager::generateCurrentGameState(std::vector<entity::BaseEntity> entities) {
+    void NetworkManager::generateCurrentGameState(std::vector<entity::BaseEntity*> entities) {
         GameState newGameState;
-        for(entity::BaseEntity entity : entities){
-            newGameState.addEntityState(entity.generateEntityState());
+        for(entity::BaseEntity* entity : entities){
+            newGameState.addEntityState(entity->generateEntityState());
         }
         currentGameState = newGameState;
     }

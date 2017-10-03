@@ -24,7 +24,7 @@ namespace network {
         void addClient(Client client);
     public:
 
-        void generateCurrentGameState(std::vector<entity::BaseEntity> entities);
+        void generateCurrentGameState(std::vector<entity::BaseEntity*> entities);
         void updateClientState();
         void checkForIncomingTraffic();
         NetworkManager();

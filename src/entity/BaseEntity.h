@@ -14,7 +14,7 @@
 namespace entity {
     class BaseEntity {
     protected:
-        uint64 id;
+        uint32 id;
         math::Vector2 position;
         math::Vector2 lastPos;
         math::Vector2 velocity;
@@ -26,7 +26,7 @@ namespace entity {
     public:
         bool shouldBeDestroyed;
 
-        virtual void update() {};
+        virtual void update();
         virtual network::EntityState generateEntityState();
         BaseEntity(math::Vector2 position, math::Vector2 velocity);
     };
