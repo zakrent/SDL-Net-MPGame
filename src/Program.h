@@ -15,7 +15,7 @@
 
 class Program {
 private:
-    const int MIN_UPDATE_TIME = 10;
+    const int MIN_UPDATE_TIME = 50;
     int lastUpdate;
     network::NetworkManager networkManager;
     std::vector<entity::BaseEntity*> entities;
