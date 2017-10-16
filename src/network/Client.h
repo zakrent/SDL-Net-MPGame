@@ -8,6 +8,7 @@
 #include <SDL_net.h>
 #include "../misc/types.h"
 #include "states/GameState.h"
+#include "states/EventState.h"
 
 namespace network {
     struct Client {
@@ -15,7 +16,10 @@ namespace network {
         uint32 timeout;
         GameState clientGameState;
 
-        Client(TCPsocket _socket, uint32_t _timeout) : socket(_socket), timeout(_timeout), clientGameState() {}
+        std::vector<EventState> events;
+
+        Client(TCPsocket _socket, uint32_t _timeout)
+                : socket(_socket), timeout(_timeout), clientGameState() {}
     };
 }
 

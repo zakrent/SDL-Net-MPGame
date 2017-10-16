@@ -11,36 +11,37 @@
 
 namespace network{
     class GameState{
-        std::map<uint64 ,EntityState> states;
+        std::vector<EntityState> states;
     public:
         void addEntityState(EntityState state){
-            states.insert(std::pair<uint64 ,EntityState>(state.getId(), state));
+            states.push_back(state);
         }
 
-        void serialize(char* buffer){
-            char tempBuffer[100];
-            for (auto state : states) {
-                strncpy(tempBuffer, "", 100);
-                state.second.serialize(tempBuffer, 0xff);
-                strncat(buffer, tempBuffer, strlen(tempBuffer)+1);
+        std::vector<EntityState>::iterator getStateWithId(uint64 id){
+            for (std::vector<EntityState>::iterator iter = states.begin(); iter != states.end() ; iter++) {
+                if(iter->getId() == id)
+                    return iter;
             }
+            return states.end();
         }
 
         int serialize(char* buffer, GameState prevGameState){
             int offset = 0;
             for (auto state : states) {
-                auto iter = prevGameState.states.find(state.second.getId());
+                auto iter = prevGameState.getStateWithId(state.getId());
                 if(iter == prevGameState.states.end()){
-                    offset += state.second.serialize(buffer+offset, 0xff);
-                }else{
+                    offset += state.serialize(buffer+offset, 0xff);
+                }
+                else{
                     auto element = *iter;
-                    EntityState prevState = element.second;
-                    if(state.second.getDelta(prevState))
-                        offset += state.second.serialize(buffer+offset, state.second.getDelta(prevState));
+                    EntityState prevState = element;
+                    if(state.getDelta(prevState))
+                        offset += state.serialize(buffer+offset, state.getDelta(prevState));
                 }
             }
             return offset;
         }
+        GameState() : states() {};
 
     };
 }
