@@ -22,4 +22,9 @@ namespace entity {
     void BaseEntity::update() {
         updatePhysics();
     }
+
+    void BaseEntity::handleCollision() {
+        position = lastPos;
+        velocity = math::Vector2(0,0);
+    }
 }

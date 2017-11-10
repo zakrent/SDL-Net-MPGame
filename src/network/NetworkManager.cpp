@@ -6,10 +6,10 @@
 #include "states/EventState.h"
 
 namespace network {
-    NetworkManager::NetworkManager() {
+    NetworkManager::NetworkManager(Uint16 port) {
         consoleLog::logMessage(consoleLog::logLevel::info, "Initializing network manager...");
         IPaddress localAddress;
-        if(SDLNet_ResolveHost(&localAddress, NULL, 1234) < 0){
+        if(SDLNet_ResolveHost(&localAddress,NULL, port) < 0){
             consoleLog::logMessage(consoleLog::logLevel::error, "Error resolving host!");
             std::abort();
         }
@@ -28,7 +28,7 @@ namespace network {
                 TCPsocket client;
                 client = SDLNet_TCP_Accept(serverTcpsock);
                 if(client){
-                    Client clientStruct(client, SDL_GetTicks());
+                    NetworkClient clientStruct(client, SDL_GetTicks());
 
                     IPaddress* clientAddr = SDLNet_TCP_GetPeerAddress(client);
                     char logMessage[50];
@@ -39,7 +39,7 @@ namespace network {
                     addClient(clientStruct);
                 }
             }
-            for(Client& client : clients){
+            for(NetworkClient& client : clients){
                 char buffer[20];
                 if(SDLNet_SocketReady(client.socket)) {
                     SDLNet_TCP_Recv(client.socket, buffer, 20);
@@ -51,7 +51,7 @@ namespace network {
         }
     }
 
-    void NetworkManager::addClient(Client client) {
+    void NetworkManager::addClient(NetworkClient client) {
         SDLNet_TCP_AddSocket(socketSet, client.socket);
         clients.push_back(client);
     }
@@ -59,7 +59,7 @@ namespace network {
     void NetworkManager::updateClientState() {
         char buffer[1000];
         for(int i = 0; i < clients.size(); i++){
-            Client client = clients[i];
+            NetworkClient client = clients[i];
             strncpy(buffer, "", 1000);
             int length = currentGameState.serialize(buffer, client.clientGameState);
             int result = SDLNet_TCP_Send(client.socket, buffer, length);
