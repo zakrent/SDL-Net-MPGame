@@ -12,16 +12,20 @@
 #include <iostream>
 #include "misc/log.h"
 #include "network/NetworkManager.h"
+#include "math/physics.h"
+#include "Server.h"
+#include "Client.h"
 
 class Program {
 private:
-    const int MIN_UPDATE_TIME = 50;
+    const int MIN_UPDATE_TIME = 30;
     int lastUpdate;
-    network::NetworkManager networkManager;
-    std::vector<entity::BaseEntity*> entities;
-public:
-    void startMainLoop();
 
+    Server* server;
+    Client* client;
+
+public:
+    void startMainLoop(bool startServer, bool startClient, char *host, Uint16 port);
     Program();
     ~Program();
 

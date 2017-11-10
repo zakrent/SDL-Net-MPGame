@@ -26,7 +26,11 @@ namespace entity {
     public:
         bool shouldBeDestroyed;
 
+        math::Vector2 getPosition(){return position;}
+        float getColliderRadius(){return colliderRadius;}
+
         virtual void update();
+        virtual void handleCollision();
         virtual network::EntityState generateEntityState();
         BaseEntity(math::Vector2 position, math::Vector2 velocity);
     };

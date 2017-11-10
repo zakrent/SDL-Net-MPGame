@@ -7,7 +7,7 @@
 
 #include <SDL_net.h>
 #include <vector>
-#include "Client.h"
+#include "NetworkClient.h"
 #include <SDL_net.h>
 #include "../misc/log.h"
 
@@ -17,17 +17,17 @@ namespace network {
         TCPsocket serverTcpsock;
         SDLNet_SocketSet socketSet;
 
-        std::vector<Client> clients;
+        std::vector<NetworkClient> clients;
 
         GameState currentGameState;
 
-        void addClient(Client client);
+        void addClient(NetworkClient client);
     public:
 
         void generateCurrentGameState(std::vector<entity::BaseEntity*> entities);
         void updateClientState();
         void checkForIncomingTraffic();
-        NetworkManager();
+        NetworkManager(Uint16 port);
     };
 }
 

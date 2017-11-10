@@ -3,10 +3,12 @@
 //
 
 #include "Program.h"
+#include "Client.h"
+
 
 Program::Program() {
     int error = SDL_Init(SDL_INIT_EVERYTHING);
-    consoleLog::logMessage(consoleLog::logLevel::info, "Server startup...");
+    consoleLog::logMessage(consoleLog::logLevel::info, "SDL init...");
     if(error < 0){
         consoleLog::logMessage(consoleLog::logLevel::error, "Error initializing SDL!");
         std::abort();
@@ -17,40 +19,37 @@ Program::Program() {
         std::abort();
     }
     lastUpdate=SDL_GetTicks();
-
-    entities.push_back(new entity::BaseEntity(math::Vector2(0,0), math::Vector2(10,0)));
+    server = nullptr;
+    client = nullptr;
 }
 
 Program::~Program() {
-    consoleLog::logMessage(consoleLog::logLevel::info, "Server shutting down...");
-
-    for(int i = 0; i < entities.size(); i++) {
-        delete entities[i];
-    }
-
+    delete server;
+    delete client;
     SDLNet_Quit();
     SDL_Quit();
 }
 
-void Program::startMainLoop() {
+void Program::startMainLoop(bool startServer, bool startClient, char *host, Uint16 port) {
     bool running = true;
+
+    if(startServer){
+        server = new Server(port);
+    }
+    if(startClient){
+        client = new Client(host, port);
+    }
+
     while(running){
-
-        networkManager.checkForIncomingTraffic();
-
-        for(int i = 0; i < entities.size(); i++){
-            entities[i]->update();
-            if(entities[i]->shouldBeDestroyed){
-                delete entities[i];
-                entities.erase(entities.begin()+i);
-            }
+        if(startServer){
+            server->update();
+        }
+        if(startClient){
+            client->update();
         }
 
-        networkManager.generateCurrentGameState(entities);
-        networkManager.updateClientState();
-
         SDL_Event event;
-        while( SDL_PollEvent( &event) != 0 ) {
+        while(SDL_PollEvent(&event) != 0 ) {
             switch(event.type){
                 case SDL_QUIT:
                     running = false;
