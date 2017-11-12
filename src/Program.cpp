@@ -3,8 +3,6 @@
 //
 
 #include "Program.h"
-#include "Client.h"
-
 
 Program::Program() {
     int error = SDL_Init(SDL_INIT_EVERYTHING);
@@ -48,7 +46,7 @@ void Program::startMainLoop(bool startServer, bool startClient, char *host, Uint
             client->update();
         }
 
-        SDL_Event event;
+        SDL_Event event{};
         while(SDL_PollEvent(&event) != 0 ) {
             switch(event.type){
                 case SDL_QUIT:

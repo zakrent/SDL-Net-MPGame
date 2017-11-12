@@ -3,13 +3,12 @@
 //
 #include <SDL_net.h>
 #include "NetworkManager.h"
-#include "states/EventState.h"
 
 namespace network {
     NetworkManager::NetworkManager(Uint16 port) {
         consoleLog::logMessage(consoleLog::logLevel::info, "Initializing network manager...");
-        IPaddress localAddress;
-        if(SDLNet_ResolveHost(&localAddress,NULL, port) < 0){
+        IPaddress localAddress{};
+        if(SDLNet_ResolveHost(&localAddress, nullptr, port) < 0){
             consoleLog::logMessage(consoleLog::logLevel::error, "Error resolving host!");
             std::abort();
         }

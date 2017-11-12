@@ -7,10 +7,10 @@
 namespace math {
     Vector2::Vector2(long double x, long double y) : x(x), y(y) {}
 
-    Vector2::~Vector2() {}
+    Vector2::~Vector2() = default;
 
     void Vector2::normalize() {
-        long double length = (long double) (sqrt(pow(x, 2) + pow(y, 2)));
+        auto length = (long double) (sqrt(pow((double)x, 2) + pow((double)y, 2)));
         x /= length;
         y /= length;
     }

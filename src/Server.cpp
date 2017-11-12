@@ -24,16 +24,16 @@ void Server::update() {
     networkManager.checkForIncomingTraffic();
 
     for(int i = 0; i < entities.size(); i++){
+        if(entities[i]->shouldBeDestroyed){
+            delete entities[i];
+            entities.erase(entities.begin()+i);
+        }
         entities[i]->update();
         for(int j = i+1; j < entities.size(); j++){
             /*if(math::checkCollision(*entities[i], *entities[j])){
                 entities[i]->handleCollision();
                 entities[j]->handleCollision();
             }*/
-        }
-        if(entities[i]->shouldBeDestroyed){
-            delete entities[i];
-            entities.erase(entities.begin()+i);
         }
     }
 

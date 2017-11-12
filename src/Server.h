@@ -17,7 +17,7 @@ private:
 public:
     void update();
 
-    Server(Uint16 port);
+    explicit Server(Uint16 port);
     ~Server();
 };
 

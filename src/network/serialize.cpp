@@ -6,7 +6,7 @@
 
 #include <SDL_net.h>
 #include "serialize.h"
-#include "../misc/types.h"
+
 namespace network {
     void serializeUInt32(char *buffer, uint32 value) {
         SDLNet_Write32(value, buffer);

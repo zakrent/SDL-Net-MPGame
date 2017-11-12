@@ -18,7 +18,7 @@ namespace consoleLog{
         error,
     };
 
-    inline void logMessage(logLevel level, std::string message){
+    inline void logMessage(logLevel level,const std::string &message){
         time_t rawtime;
         struct tm * timeinfo;
         char charTime [80];

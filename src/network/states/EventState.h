@@ -18,8 +18,9 @@ namespace network {
             offset += 4;
             return offset;
         }
-        EventState(uint32 eventType) : eventType(eventType){}
-        EventState(char* buffer){
+
+        explicit EventState(uint32 eventType) : eventType(eventType){}
+        explicit EventState(char* buffer){
             eventType = unserializeUInt32(buffer);
         }
     };

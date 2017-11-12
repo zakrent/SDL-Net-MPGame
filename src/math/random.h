@@ -19,8 +19,8 @@ namespace math {
         return intDistribution(generator);
     }
 
-    uint64 getRandomId(){
-        return ((uint64)randomInt(0,2147483647)+(uint64)randomInt(0,2147483647));
+    uint32 getRandomId(){
+        return ((uint32)randomInt(0,2147483647)+(uint32)randomInt(0,2147483647));
     }
 
 }

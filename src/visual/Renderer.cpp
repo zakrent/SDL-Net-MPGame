@@ -21,7 +21,7 @@ namespace visual {
     }
 
     void Renderer::renderTexture(SDL_Rect srcrect, SDL_Rect dstrect) {
-        SDL_RenderCopyEx(renderer,mainTextureSheet.getTexturePointer(),  &srcrect, &dstrect, 0, NULL, SDL_FLIP_NONE);
+        SDL_RenderCopyEx(renderer,mainTextureSheet.getTexturePointer(),  &srcrect, &dstrect, 0, nullptr, SDL_FLIP_NONE);
     }
 
 

@@ -7,16 +7,14 @@
 #include "network/states/EventState.h"
 
 Client::Client(char *host, Uint16 port) {
-    IPaddress ipaddress;
+    IPaddress ipaddress{};
     SDLNet_ResolveHost(&ipaddress, host, port);
     tcpsock=SDLNet_TCP_Open(&ipaddress);
     socketSet=SDLNet_AllocSocketSet(1);
     SDLNet_TCP_AddSocket(socketSet,tcpsock);
 }
 
-Client::~Client() {
-
-}
+Client::~Client() = default;
 
 network::EntityState* Client::getStateWithId(uint64 id){
     for (int i = 0; i < states.size(); i++) {

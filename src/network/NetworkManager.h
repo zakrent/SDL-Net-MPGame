@@ -27,7 +27,7 @@ namespace network {
         void generateCurrentGameState(std::vector<entity::BaseEntity*> entities);
         void updateClientState();
         void checkForIncomingTraffic();
-        NetworkManager(Uint16 port);
+        explicit NetworkManager(Uint16 port);
     };
 }
 
