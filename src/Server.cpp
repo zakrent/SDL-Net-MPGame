@@ -7,8 +7,8 @@
 
 Server::Server(Uint16 port) : networkManager(port) {
     consoleLog::logMessage(consoleLog::logLevel::info, "Server started");
-    entities.push_back(new entity::BaseEntity(math::Vector2(5,0), math::Vector2(10,0)));
-    entities.push_back(new entity::BaseEntity(math::Vector2(200,0), math::Vector2(-5,0)));
+    entities.push_back(new entity::BaseEntity(math::Vector2(0,500), math::Vector2(5,0), SDL_Rect{0,0,24,24}));
+    entities.push_back(new entity::BaseEntity(math::Vector2(10,10), math::Vector2(1,0), SDL_Rect{0,0,24,24}));
 }
 
 Server::~Server() {
@@ -26,10 +26,10 @@ void Server::update() {
     for(int i = 0; i < entities.size(); i++){
         entities[i]->update();
         for(int j = i+1; j < entities.size(); j++){
-            if(math::checkCollision(*entities[i], *entities[j])){
+            /*if(math::checkCollision(*entities[i], *entities[j])){
                 entities[i]->handleCollision();
                 entities[j]->handleCollision();
-            }
+            }*/
         }
         if(entities[i]->shouldBeDestroyed){
             delete entities[i];

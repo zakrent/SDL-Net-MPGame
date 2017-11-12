@@ -20,3 +20,5 @@ file(GLOB_RECURSE SOURCE_FILES
 
 add_executable(Game-MP-Server ${SOURCE_FILES})
 target_link_libraries(Game-MP-Server ${SDL2_LIBRARIES} ${SDL2_NET_LIBRARIES})
+
+file(COPY textures/ DESTINATION textures/)

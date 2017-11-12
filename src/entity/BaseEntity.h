@@ -32,7 +32,7 @@ namespace entity {
         virtual void update();
         virtual void handleCollision();
         virtual network::EntityState generateEntityState();
-        BaseEntity(math::Vector2 position, math::Vector2 velocity);
+        BaseEntity(math::Vector2 position, math::Vector2 velocity, SDL_Rect srcrect);
     };
 }
 

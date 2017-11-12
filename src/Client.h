@@ -7,10 +7,17 @@
 
 
 #include <SDL_net.h>
+#include <vector>
+#include "visual/Renderer.h"
+#include "network/states/EntityState.h"
 
 class Client {
     TCPsocket tcpsock;
     SDLNet_SocketSet socketSet;
+    visual::Renderer renderer;
+    std::vector<network::EntityState> states;
+
+    network::EntityState* getStateWithId(uint64 id);
 
 public:
     void update();

@@ -18,7 +18,7 @@
 
 class Program {
 private:
-    const int MIN_UPDATE_TIME = 30;
+    const int MIN_UPDATE_TIME = 60;
     int lastUpdate;
 
     Server* server;

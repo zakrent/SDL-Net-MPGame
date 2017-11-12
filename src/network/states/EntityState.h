@@ -7,19 +7,20 @@
 
 #include <SDL_video.h>
 #include <iostream>
+#include <SDL_net.h>
 #include "../../misc/types.h"
 #include "../../math/Vector2.h"
 #include "../serialize.h"
 
 namespace network{
     class EntityState{
-        uint64 id;
+        uint32 id{};
         math::Vector2 position;
         math::Vector2 velocity;
         SDL_Rect srcrect;
 
     public:
-        uint64 getId(){
+        uint32 getId(){
             return id;
         }
 
@@ -35,6 +36,15 @@ namespace network{
 
             return delta;
         }
+
+        SDL_Rect getSrcrect(){
+            return srcrect;
+        }
+
+        math::Vector2 getPosition(){
+            return position;
+        }
+
         int serialize(char* buffer, uint16 delta){
             int offset = 0;
             serializeUInt32(buffer+offset, id);
@@ -54,15 +64,40 @@ namespace network{
                 offset += 4;
                 serializeUInt16(buffer+offset, (uint16)srcrect.y);
                 offset += 4;
-                serializeUInt16(buffer+offset, srcrect.h);
+                serializeUInt16(buffer+offset, (uint16)srcrect.h);
                 offset += 4;
-                serializeUInt16(buffer+offset, srcrect.w);
+                serializeUInt16(buffer+offset, (uint16)srcrect.w);
                 offset += 4;
             }
             return offset;
         }
 
-        EntityState(uint64 id, math::Vector2 position, math::Vector2 velocity, SDL_Rect srcrect)
+        void networkUpdate(TCPsocket tcpsock){
+            char buffer[20];
+            strncpy(buffer, "", 20);
+            SDLNet_TCP_Recv(tcpsock, buffer, 2);
+            uint16 delta = network::unserializeUInt16(buffer);
+            if ((delta & 0b0000000000000001) == 0b0000000000000001) {
+                SDLNet_TCP_Recv(tcpsock, buffer, 8);
+                position = unserializeVector(buffer);
+            }
+            if ((delta & 0b0000000000000010) == 0b0000000000000010) {
+                SDLNet_TCP_Recv(tcpsock, buffer, 8);
+                velocity = unserializeVector(buffer);
+            }
+            if ((delta & 0b0000000000000100) == 0b0000000000000100) {
+                SDLNet_TCP_Recv(tcpsock, buffer, 4);
+                srcrect.x = network::unserializeUInt16(buffer);
+                SDLNet_TCP_Recv(tcpsock, buffer, 4);
+                srcrect.y = network::unserializeUInt16(buffer);
+                SDLNet_TCP_Recv(tcpsock, buffer, 4);
+                srcrect.w = network::unserializeUInt16(buffer);
+                SDLNet_TCP_Recv(tcpsock, buffer, 4);
+                srcrect.h = network::unserializeUInt16(buffer);
+            }
+        }
+
+        EntityState(uint32 id, math::Vector2 position, math::Vector2 velocity, SDL_Rect srcrect)
             : id(id), position(position), velocity(velocity), srcrect(srcrect){}
     };
 }
