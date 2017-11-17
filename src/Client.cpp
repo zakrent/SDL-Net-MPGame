@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Client.h"
 #include "network/states/EventState.h"
+#include "network/states/events/HeartBeatEvent.h"
 
 Client::Client(char *host, Uint16 port) {
     IPaddress ipaddress{};
@@ -26,16 +27,16 @@ network::EntityState* Client::getStateWithId(uint64 id){
 }
 
 void Client::update() {
-    network::EventState event(14);
     char buffer[20];
+    network::HeartBeatEvent event;
     int length = event.serialize(buffer);
     SDLNet_TCP_Send(tcpsock, buffer, length);
+
     while(SDLNet_CheckSockets(socketSet, 0)) {
         strncpy(buffer, "", 20);
         SDLNet_TCP_Recv(tcpsock, buffer, 4);
         uint32 id = network::unserializeUInt32(buffer);
         network::EntityState* state = getStateWithId(id);
-        std::cout<<id<< std::endl;
         if(state){
             state->networkUpdate(tcpsock);
         }

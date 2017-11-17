@@ -3,6 +3,7 @@
 //
 #include <SDL_net.h>
 #include "NetworkManager.h"
+#include "states/events/HeartBeatEvent.h"
 
 namespace network {
     NetworkManager::NetworkManager(Uint16 port) {
@@ -39,11 +40,10 @@ namespace network {
                 }
             }
             for(NetworkClient& client : clients){
-                char buffer[20];
+                client.events.clear();
                 if(SDLNet_SocketReady(client.socket)) {
-                    SDLNet_TCP_Recv(client.socket, buffer, 20);
+                    EventState eventState(client.socket);
                     client.timeout = SDL_GetTicks();
-                    EventState eventState(buffer);
                     client.events.push_back(eventState);
                 }
             }
@@ -63,6 +63,13 @@ namespace network {
             int length = currentGameState.serialize(buffer, client.clientGameState);
             int result = SDLNet_TCP_Send(client.socket, buffer, length);
             if(result < length || (SDL_GetTicks() - client.timeout > 2000) ){
+
+                char logMessage[50];
+                IPaddress* clientAddr = SDLNet_TCP_GetPeerAddress(client.socket);
+                Uint32 ipAddress = SDLNet_Read32(clientAddr);
+                snprintf(logMessage, 50, "%u.%u.%u.%u timed out", ((ipAddress & 0xff000000) >> 24), ((ipAddress & 0x00ff0000) >> 16), ((ipAddress & 0x0000ff00) >> 8), (ipAddress & 0x000000ff));
+                consoleLog::logMessage(consoleLog::logLevel::info ,logMessage);
+
                 SDLNet_TCP_DelSocket(socketSet, client.socket);
                 clients.erase(clients.begin()+i);
             }
