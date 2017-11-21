@@ -4,6 +4,7 @@
 #include <SDL_net.h>
 #include "NetworkManager.h"
 #include "states/events/HeartBeatEvent.h"
+#include "states/events/ControlEvent.h"
 
 namespace network {
     NetworkManager::NetworkManager(Uint16 port) {
@@ -41,11 +42,18 @@ namespace network {
             }
             for(NetworkClient& client : clients){
                 client.events.clear();
-                if(SDLNet_SocketReady(client.socket)) {
+                while(SDLNet_SocketReady(client.socket)) {
                     EventState eventState(client.socket);
                     client.timeout = SDL_GetTicks();
                     client.events.push_back(eventState);
+                    SDLNet_CheckSockets(socketSet, 0);
                 }
+
+                if(!client.events.empty() && client.events.back().eventType == 2){
+                    ControlEvent event(client.events.back().eventData);
+                    std::cout<<event.controls<<"\n";
+                }
+
             }
         }
     }

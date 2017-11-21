@@ -12,12 +12,7 @@ namespace network{
     struct BaseEvent{
         const uint32 eventType;
 
-        virtual int serialize(char* buffer){
-            int offset = 0;
-            serializeUInt32(buffer, eventType);
-            offset += 4;
-            return offset;
-        }
+        virtual int serialize(char* buffer) = 0;
 
         BaseEvent(uint32 _eventType) : eventType(_eventType){};
         BaseEvent(char* data) : eventType(unserializeUInt32(data)){};

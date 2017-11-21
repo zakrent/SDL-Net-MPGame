@@ -26,6 +26,7 @@ namespace network {
                 case 0:
                     return 4;
                 case 1:
+                case 2:
                     return 8;
                 default:
                     return 0;
@@ -37,7 +38,7 @@ namespace network {
             return getDataSize();
         }
 
-        EventState(BaseEvent baseEvent){
+        EventState(BaseEvent& baseEvent){
             eventType = baseEvent.eventType;
             baseEvent.serialize(eventData);
         }

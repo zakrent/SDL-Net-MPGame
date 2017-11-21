@@ -5,6 +5,7 @@
 #ifndef GAME_MP_SERVER_HEARTBEATEVENT_H
 #define GAME_MP_SERVER_HEARTBEATEVENT_H
 
+#include <SDL_timer.h>
 #include "BaseEvent.h"
 
 namespace network{
