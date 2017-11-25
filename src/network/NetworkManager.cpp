@@ -42,11 +42,15 @@ namespace network {
             }
             for(NetworkClient& client : clients){
                 client.events.clear();
-                while(SDLNet_SocketReady(client.socket)) {
+                int counter = 0;
+                while(SDLNet_SocketReady(client.socket) && counter < 10) {
                     EventState eventState(client.socket);
-                    client.timeout = SDL_GetTicks();
                     client.events.push_back(eventState);
-                    SDLNet_CheckSockets(socketSet, 0);
+                    int result = SDLNet_CheckSockets(socketSet, 0);
+                    if(result < 1){
+                        break;
+                    }
+                    counter++;
                 }
             }
         }
@@ -64,8 +68,8 @@ namespace network {
             strncpy(buffer, "", 1000);
             int length = currentGameState.serialize(buffer, client.clientGameState);
             int result = SDLNet_TCP_Send(client.socket, buffer, length);
-            if(result < length || (SDL_GetTicks() - client.timeout > 2000) ){
-
+            int test = (SDL_GetTicks() - client.timeout);
+            if(result < length || (test > 2000) ){
                 char logMessage[50];
                 IPaddress* clientAddr = SDLNet_TCP_GetPeerAddress(client.socket);
                 Uint32 ipAddress = SDLNet_Read32(clientAddr);

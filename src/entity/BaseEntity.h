@@ -24,6 +24,7 @@ namespace entity {
         void updatePhysics();
 
     public:
+        bool active;
         bool shouldBeDestroyed;
 
         uint32 getID(){return id;}

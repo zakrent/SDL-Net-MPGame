@@ -16,18 +16,15 @@ namespace network {
     private:
         TCPsocket serverTcpsock;
         SDLNet_SocketSet socketSet;
-
-        std::vector<NetworkClient> clients;
-
         GameState currentGameState;
 
         void addClient(NetworkClient client);
     public:
+        std::vector<NetworkClient> clients;
 
         void generateCurrentGameState(std::vector<entity::BaseEntity*> entities);
         void updateClientState();
         void checkForIncomingTraffic();
-        std::vector<NetworkClient> getClients(){return clients;}
         explicit NetworkManager(Uint16 port);
     };
 }

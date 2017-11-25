@@ -30,17 +30,21 @@ entity::BaseEntity *Server::getEntityWithId(uint32 id) {
 void Server::update() {
     networkManager.checkForIncomingTraffic();
 
-    for(const network::NetworkClient &client : networkManager.getClients()){
+    for(network::NetworkClient& client : networkManager.clients){
         entity::BaseEntity* entity = getEntityWithId(client.playerEntityID);
         if(!entity){
             entities.push_back(new entity::PlayerEntity(math::Vector2(50,50), math::Vector2(0,0), SDL_Rect{0,0,24,24}));
             entity = entities.back();
         }
-        for(network::EventState eventState : client.events){
+        entity->active = true;
+        for(network::EventState& eventState : client.events){
             switch(eventState.eventType){
+                case 1: {
+                    client.timeout = SDL_GetTicks();
+                    break;
+                }
                 case 2: {
                     network::ControlEvent event(eventState.eventData);
-
 
                     bool wKey = (event.controls & 0x1) != 0;
                     bool sKey = (event.controls & 0x2) != 0;
@@ -65,6 +69,7 @@ void Server::update() {
         if(entities[i]->shouldBeDestroyed){
             delete entities[i];
             entities.erase(entities.begin()+i);
+            continue;
         }
         entities[i]->update();
         for(int j = i+1; j < entities.size(); j++){
@@ -73,6 +78,9 @@ void Server::update() {
                 entities[j]->handleCollision();
             }
         }
+        if(!entities[i]->active)
+            entities[i]->shouldBeDestroyed = true;
+        entities[i]->active = false;
     }
 
     networkManager.generateCurrentGameState(entities);
