@@ -48,12 +48,6 @@ namespace network {
                     client.events.push_back(eventState);
                     SDLNet_CheckSockets(socketSet, 0);
                 }
-
-                if(!client.events.empty() && client.events.back().eventType == 2){
-                    ControlEvent event(client.events.back().eventData);
-                    std::cout<<event.controls<<"\n";
-                }
-
             }
         }
     }

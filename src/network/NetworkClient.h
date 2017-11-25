@@ -9,9 +9,11 @@
 #include "../misc/types.h"
 #include "states/GameState.h"
 #include "states/EventState.h"
+#include "../math/random.h"
 
 namespace network {
     struct NetworkClient {
+        uint32 playerEntityID;
         TCPsocket socket;
         uint32 timeout;
         GameState clientGameState;
@@ -19,7 +21,7 @@ namespace network {
         std::vector<EventState> events;
 
         NetworkClient(TCPsocket _socket, uint32_t _timeout)
-                : socket(_socket), timeout(_timeout), clientGameState() {}
+                : socket(_socket), timeout(_timeout), clientGameState(), playerEntityID(math::getRandomId()) {}
     };
 }
 

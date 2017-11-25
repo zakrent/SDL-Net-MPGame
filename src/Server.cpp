@@ -4,11 +4,11 @@
 
 #include "Server.h"
 #include "math/physics.h"
+#include "entity/PlayerEntity.h"
+#include "network/states/events/ControlEvent.h"
 
 Server::Server(Uint16 port) : networkManager(port) {
     consoleLog::logMessage(consoleLog::logLevel::info, "Server started");
-    entities.push_back(new entity::BaseEntity(math::Vector2(0,500), math::Vector2(5,0), SDL_Rect{0,0,24,24}));
-    entities.push_back(new entity::BaseEntity(math::Vector2(10,10), math::Vector2(1,0), SDL_Rect{0,0,24,24}));
 }
 
 Server::~Server() {
@@ -19,9 +19,47 @@ Server::~Server() {
     }
 }
 
+entity::BaseEntity *Server::getEntityWithId(uint32 id) {
+    for(auto entity : entities){
+        if(entity->getID() == id)
+            return entity;
+    }
+    return nullptr;
+}
 
 void Server::update() {
     networkManager.checkForIncomingTraffic();
+
+    for(const network::NetworkClient &client : networkManager.getClients()){
+        entity::BaseEntity* entity = getEntityWithId(client.playerEntityID);
+        if(!entity){
+            entities.push_back(new entity::PlayerEntity(math::Vector2(50,50), math::Vector2(0,0), SDL_Rect{0,0,24,24}));
+            entity = entities.back();
+        }
+        for(network::EventState eventState : client.events){
+            switch(eventState.eventType){
+                case 2: {
+                    network::ControlEvent event(eventState.eventData);
+
+
+                    bool wKey = (event.controls & 0x1) != 0;
+                    bool sKey = (event.controls & 0x2) != 0;
+                    bool dKey = (event.controls & 0x4) != 0;
+                    bool aKey = (event.controls & 0x8) != 0;
+
+                    float targetXVel = dKey - aKey;
+                    float targetYVel = sKey - wKey;
+
+                    math::Vector2 targetVelocity(targetXVel, targetYVel);
+                    entity->setVelocity(targetVelocity);
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+
+    }
 
     for(int i = 0; i < entities.size(); i++){
         if(entities[i]->shouldBeDestroyed){
@@ -30,10 +68,10 @@ void Server::update() {
         }
         entities[i]->update();
         for(int j = i+1; j < entities.size(); j++){
-            /*if(math::checkCollision(*entities[i], *entities[j])){
+            if(math::checkCollision(*entities[i], *entities[j])){
                 entities[i]->handleCollision();
                 entities[j]->handleCollision();
-            }*/
+            }
         }
     }
 

@@ -14,6 +14,7 @@ class Server {
 private:
     network::NetworkManager networkManager;
     std::vector<entity::BaseEntity*> entities;
+    entity::BaseEntity* getEntityWithId(uint32 id);
 public:
     void update();
 

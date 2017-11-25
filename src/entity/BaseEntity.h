@@ -26,6 +26,8 @@ namespace entity {
     public:
         bool shouldBeDestroyed;
 
+        uint32 getID(){return id;}
+        void setVelocity(const math::Vector2 &_velocity){velocity = _velocity;}
         math::Vector2 getPosition(){return position;}
         float getColliderRadius(){return colliderRadius;}
 
